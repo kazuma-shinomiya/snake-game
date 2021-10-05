@@ -7,7 +7,37 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+.App {
+  max-width: calc(9px * 35 + 1px * 2);
+  text-align: center;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.field {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dots {
+  height: 9px;
+  width: 9px;
+  background-color: black;
+}
+
+.snake {
+  background-color: white;
+}
+
+.food {
+  background-color: pink;
 }
