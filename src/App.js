@@ -2,7 +2,7 @@ import Navigation from './components/Navigation';
 import Field from './components/Field';
 import Button from './components/Button';
 import ManipulationPanel from './components/ManipulationPanel';
-import { initFields } from './utils';
+import { initFields, getFoodPosition } from './utils';
 import { useCallback, useEffect, useState } from 'react';
 
 const initialPosition = { x: 17, y: 17 };
@@ -52,13 +52,13 @@ const unsubscribe = () => {
 }
 function App() {
   const [fields, setFields] = useState(initialValues);
-  const [position, setPosition] = useState();
+  const [body, setBody] = useState([]);
   const [status, setStatus] = useState(GAME_STATUS.init);
   const [direction, setDirection] = useState(DIRECTION.up);
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    setPosition(initialPosition);
+    setBody([initialPosition]);
     timer = setInterval(() => {
       setTick(tick => tick + 1);
     }, defaultInterval);
@@ -67,7 +67,7 @@ function App() {
 
 
   useEffect(() => {
-    if (!position || status !== GAME_STATUS.playing) return;
+    if (body.length === 0 || status !== GAME_STATUS.playing) return;
 
     const canContinue = handleMoving();
     if (!canContinue) {
@@ -83,7 +83,7 @@ function App() {
       setTick(tick => tick + 1);
     }, defaultInterval);
     setStatus(GAME_STATUS.init);
-    setPosition(initialPosition);
+    setBody([initialPosition]);
     setDirection(DIRECTION.up);
     setFields(initFields(35, initialPosition));
   }
@@ -108,7 +108,7 @@ function App() {
   }, [onChangeDirection])
 
   const handleMoving = () => {
-    const { x, y } = position;
+    const { x, y } = body[0];
     const delta = DELTA[direction];
     const newPosition = { 
       x: x + delta.x, 
@@ -117,9 +117,17 @@ function App() {
     if (isCollision(fields.length, newPosition)) {
       return false;
     }
-    fields[y][x] = '';
+    const newBody = [...body];
+    if (fields[newPosition.y][newPosition.x] !== 'food') {
+      const removingTrack = newBody.pop();
+      fields[removingTrack.y][removingTrack.x] = '';
+    } else {
+      const food = getFoodPosition(fields.length, [...newBody, newPosition]);
+      fields[food.y][food.x] = 'food';
+    }
     fields[newPosition.y][newPosition.x] = 'snake';
-    setPosition(newPosition);
+    newBody.unshift(newPosition);
+    setBody(newBody);
     setFields(fields);
     return true;
   }
