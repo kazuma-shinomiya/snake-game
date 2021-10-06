@@ -8,6 +8,8 @@ import { useCallback, useEffect, useState } from 'react';
 const initialPosition = { x: 17, y: 17 };
 const initialValues = initFields(35, initialPosition);
 const defaultInterval = 1000;
+const defaultDifficulty = 3;
+const DIFFICULTY = [1000, 500, 100, 50, 10];
 const GAME_STATUS = Object.freeze({
   init: 'init',
   playing: 'playing',
@@ -55,15 +57,17 @@ function App() {
   const [body, setBody] = useState([]);
   const [status, setStatus] = useState(GAME_STATUS.init);
   const [direction, setDirection] = useState(DIRECTION.up);
+  const [difficulty, setDifficulty] = useState(defaultDifficulty);
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
     setBody([initialPosition]);
+    const interval = DIFFICULTY[difficulty - 1];
     timer = setInterval(() => {
       setTick(tick => tick + 1);
-    }, defaultInterval);
+    }, interval);
     return unsubscribe;
-  }, []);
+  }, [difficulty]);
 
 
   useEffect(() => {
@@ -77,7 +81,7 @@ function App() {
   }, [tick]);
 
   const onStop = () => setStatus(GAME_STATUS.suspended);
-  
+
   const onStart = () => setStatus(GAME_STATUS.playing);
 
   const onRestart = () => {
@@ -96,6 +100,13 @@ function App() {
 
     setDirection(newDirection);
   }, [direction, status])
+
+  const onChangeDifficulty = useCallback((difficulty) => {
+    if (status !== GAME_STATUS.init) return;
+    if (difficulty < 1 || difficulty > difficulty.length) return;
+
+    setDifficulty(difficulty);
+  }, [status, difficulty])
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -151,7 +162,7 @@ function App() {
         <div className="title-container">
           <h1 className="title">Snake Game</h1>
         </div>
-        <Navigation />
+        <Navigation length={body.length} difficulty={difficulty} onChangeDifficulty={onChangeDifficulty} />
       </header>
       <main className="main">
         <Field fields={fields} />
