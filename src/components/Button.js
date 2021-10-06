@@ -1,7 +1,12 @@
-const Button = () => {
+const Button = ({ status, onStart, onRestart }) => {
   return (
     <div className="button">
-      <button>start</button>
+      {
+        status === "gameOver" ?
+        <button onClick={onRestart}>gameOver</button>
+        :
+        <button onClick={onStart}>start</button>
+      }
     </div>
   )
 }
