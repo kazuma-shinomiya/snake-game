@@ -7,7 +7,6 @@ import { useCallback, useEffect, useState } from 'react';
 
 const initialPosition = { x: 17, y: 17 };
 const initialValues = initFields(35, initialPosition);
-const defaultInterval = 1000;
 const defaultDifficulty = 3;
 const DIFFICULTY = [1000, 500, 100, 50, 10];
 const GAME_STATUS = Object.freeze({
@@ -85,9 +84,10 @@ function App() {
   const onStart = () => setStatus(GAME_STATUS.playing);
 
   const onRestart = () => {
+    const interval = DIFFICULTY[difficulty - 1];
     timer = setInterval(() => {
       setTick(tick => tick + 1);
-    }, defaultInterval);
+    }, interval);
     setStatus(GAME_STATUS.init);
     setBody([initialPosition]);
     setDirection(DIRECTION.up);
