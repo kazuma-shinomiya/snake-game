@@ -4,45 +4,17 @@ import Button from './components/Button';
 import ManipulationPanel from './components/ManipulationPanel';
 import { initFields, getFoodPosition } from './utils';
 import { useCallback, useEffect, useState } from 'react';
-
-const initialPosition = { x: 17, y: 17 };
-const initialValues = initFields(35, initialPosition);
-const defaultDifficulty = 3;
-const DIFFICULTY = [1000, 500, 100, 50, 10];
-const GAME_STATUS = Object.freeze({
-  init: 'init',
-  playing: 'playing',
-  suspended: 'suspended',
-  gameOver: 'gameOver', 
-})
-
-const DIRECTION = Object.freeze({
-  up: 'up',
-  right: 'right',
-  left: 'left',
-  down: 'down',
-})
-
-const DIRECTION_KEYCODE_MAP = Object.freeze({
-  37: DIRECTION.left,
-  38: DIRECTION.up,
-  39: DIRECTION.right,
-  40: DIRECTION.down,
-})
-
-const OPPOSITE_DIRECTION = Object.freeze({
-  up: 'down',
-  right: 'left',
-  left: 'right',
-  down: 'up',
-})
-
-const DELTA = Object.freeze({
-  up: { x: 0, y: -1 },
-  right: { x: 1, y: 0 },
-  left: { x: -1, y: 0 },
-  down: { x: 0, y: 1 },
-})
+import {
+  initialPosition,
+  initialValues,
+  defaultDifficulty,
+  DELTA,
+  DIFFICULTY,
+  DIRECTION,
+  DIRECTION_KEYCODE_MAP,
+  OPPOSITE_DIRECTION,
+  GAME_STATUS,
+} from './constants';
 
 let timer = undefined;
 
@@ -51,6 +23,7 @@ const unsubscribe = () => {
   
   clearInterval(timer);
 }
+
 function App() {
   const [fields, setFields] = useState(initialValues);
   const [body, setBody] = useState([]);

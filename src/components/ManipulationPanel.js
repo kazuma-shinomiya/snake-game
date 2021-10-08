@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowUp, faArrowDown, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { DIRECTION } from "../constants";
 
 const ManipulationPanel = ({ onChange }) => {
-  const onUp = () => onChange('up');
-  const onRight = () => onChange('right');
-  const onLeft = () => onChange('left');
-  const onDown = () => onChange('down');
+  const onUp = () => onChange(DIRECTION.up);
+  const onRight = () => onChange(DIRECTION.right);
+  const onLeft = () => onChange(DIRECTION.left);
+  const onDown = () => onChange(DIRECTION.down);
   
   return (
     <div className="manipulation-panel">
